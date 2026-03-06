@@ -6,9 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview",
-    "generate-api": "orval"
+    "lint": "eslint . --fix",
+    "contract": "orval"
   },
   "dependencies": {
     "axios": "^1.13.6",

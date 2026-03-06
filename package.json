@@ -1,0 +1,19 @@
+{
+  "name": "DLSIA",
+  "private": true,
+  "version": "0.0.1",
+  "description": "",
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev -w client\" \"npm run dev -w server\"",
+    "build": "npm run build --workspaces",
+    "lint": "npm run lint --workspaces",
+    "contract": "npm run contract -w client"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
