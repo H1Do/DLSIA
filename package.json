@@ -11,7 +11,10 @@
     "dev": "concurrently \"npm run dev -w client\" \"npm run dev -w server\"",
     "build": "npm run build --workspaces",
     "lint": "npm run lint --workspaces",
-    "contract": "npm run contract -w client"
+    "contract": "npm run contract -w client",
+    "generate": "npm run generate -w server",
+    "migrate": "npm run migrate -w server",
+    "migrate:init": "npm run migrate:init -w server"
   },
   "devDependencies": {
     "concurrently": "^9.2.1"

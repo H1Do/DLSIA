@@ -9,7 +9,10 @@
     "dev": "nest start --watch",
     "build": "nest build",
     "lint": "eslint \"src/**/*.ts\" --fix",
-    "start": "node dist/main"
+    "start": "node dist/main",
+    "migrate": "prisma migrate dev",
+    "migrate:init": "prisma migrate dev --name init",
+    "generate": "prisma generate"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
