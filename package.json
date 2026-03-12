@@ -14,7 +14,9 @@
     "contract": "npm run contract -w client",
     "generate": "npm run generate -w server",
     "migrate": "npm run migrate -w server",
-    "migrate:init": "npm run migrate:init -w server"
+    "migrate:init": "npm run migrate:init -w server",
+    "migrate:deploy": "npm run migrate:deploy -w server",
+    "studio": "npm run studio -w server"
   },
   "devDependencies": {
     "concurrently": "^9.2.1"
