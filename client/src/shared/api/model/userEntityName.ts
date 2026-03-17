@@ -5,3 +5,4 @@
  * OpenAPI spec version: 1.0
  */
 
+export type UserEntityName = { [key: string]: unknown };

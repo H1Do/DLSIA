@@ -1,13 +1,21 @@
 import { defineConfig } from 'orval';
+import { config } from 'dotenv';
+config();
 
 export default defineConfig({
   api: {
-    input: 'http://localhost:4000/api-json/',
+    input: process.env.VITE_API_SCHEMA_URL,
     output: {
-      target: './src/api/contract.ts',
-      schemas: './src/api/model',
+      target: './src/shared/api/generated.ts',
       client: 'axios-functions',
+      schemas: './src/shared/api/model',
       mode: 'split',
+      override: {
+        mutator: {
+          path: './src/shared/api/custom-instance.ts',
+          name: 'customInstance',
+        },
+      },
     },
   },
 });
