@@ -2,7 +2,7 @@ import axios, { type AxiosRequestConfig } from 'axios';
 import { useAuthStore } from '../store/useAuthStore';
 
 export const AXIOS_INSTANCE = axios.create({
-  baseURL: import.meta.env.API_BASE_URL,
+  baseURL: import.meta.env.VITE_API_BASE_URL,
 });
 
 AXIOS_INSTANCE.interceptors.request.use((config) => {
