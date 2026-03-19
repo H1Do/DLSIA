@@ -5,6 +5,7 @@
  * OpenAPI spec version: 1.0
  */
 
+export * from './authEntity';
 export * from './createUserDto';
 export * from './loginDto';
 export * from './userEntity';

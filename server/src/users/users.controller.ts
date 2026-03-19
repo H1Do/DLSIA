@@ -10,7 +10,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { User } from '../generated/client';
 import { UserEntity } from './entities/user.entity';
-import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 @Controller('users')
 export class UsersController {
@@ -19,6 +19,7 @@ export class UsersController {
   @Get()
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
+  @ApiOperation({ operationId: 'getAllUsers' })
   @ApiResponse({ status: 200, type: UserEntity, isArray: true })
   async findAll() {
     const users = await this.usersService.findAll();
@@ -29,6 +30,7 @@ export class UsersController {
   @UseInterceptors(ClassSerializerInterceptor)
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
+  @ApiOperation({ operationId: 'getMe' })
   @ApiResponse({
     status: 200,
     description: 'Profile data has been successfully received',

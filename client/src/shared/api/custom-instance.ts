@@ -14,8 +14,18 @@ AXIOS_INSTANCE.interceptors.request.use((config) => {
 });
 
 export const customInstance = async <T>(
+  url: string,
   config: AxiosRequestConfig,
-): Promise<T> => {
-  const { data } = await AXIOS_INSTANCE(config);
-  return data;
+): Promise<{ data: T; status: number; headers: unknown }> => {
+  const response = await AXIOS_INSTANCE({
+    url,
+    ...config,
+    // @ts-expect-error body doesn't exist...
+    data: config.data || config.body,
+  });
+  return {
+    data: response.data,
+    status: response.status,
+    headers: response.headers,
+  };
 };

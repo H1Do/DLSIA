@@ -7,6 +7,7 @@ export const Route = createRootRoute({
   component: () => {
     const { token } = theme.useToken();
 
+    // TODO decompose this (components like Header should be located in shared layer)
     return (
       <>
         <ConfigProvider
