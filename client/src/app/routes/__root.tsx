@@ -1,13 +1,15 @@
-import { createRootRoute, Outlet } from '@tanstack/react-router';
+import type { QueryClient } from '@tanstack/react-query';
+import { createRootRouteWithContext, Outlet } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/router-devtools';
-import { Avatar, ConfigProvider, Layout, theme } from 'antd';
-import { Content, Footer, Header } from 'antd/es/layout/layout';
+import { ConfigProvider, theme } from 'antd';
 
-export const Route = createRootRoute({
+interface RouterContext {
+  queryClient: QueryClient;
+  auth: { isAuthenticated: boolean };
+}
+
+export const Route = createRootRouteWithContext<RouterContext>()({
   component: () => {
-    const { token } = theme.useToken();
-
-    // TODO decompose this (components like Header should be located in shared layer)
     return (
       <>
         <ConfigProvider
@@ -18,50 +20,7 @@ export const Route = createRootRoute({
             },
           }}
         >
-          <Layout style={{ minHeight: '100vh' }}>
-            <Header
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                background: token.colorBgContainer,
-                borderBottom: `1px solid ${token.colorBorderSecondary}`,
-                padding: `0 ${token.paddingLG}px`,
-              }}
-            >
-              <div style={{ fontWeight: 'bold', color: token.colorPrimary }}>
-                Here will be logo
-              </div>
-              <Avatar />
-            </Header>
-            <Content
-              style={{
-                padding: token.paddingLG,
-                background: token.colorBgLayout,
-              }}
-            >
-              <div
-                style={{
-                  background: token.colorBgContainer,
-                  minHeight: '280px',
-                  padding: token.paddingLG,
-                  borderRadius: token.borderRadiusLG,
-                  boxShadow: token.boxShadowTertiary,
-                }}
-              >
-                <Outlet />
-              </div>
-            </Content>
-            <Footer
-              style={{
-                textAlign: 'center',
-                color: token.colorTextDescription,
-                background: token.colorBgLayout,
-              }}
-            >
-              footer placeholder
-            </Footer>
-          </Layout>
+          <Outlet />
         </ConfigProvider>
         <TanStackRouterDevtools />
       </>

@@ -3,6 +3,7 @@ import type { LoginDto } from '../../../shared/api/model';
 import { useAuthStore } from '../../../shared/store/useAuthStore';
 import { Button, Form, Input, message } from 'antd';
 import { useLogin } from '../../../shared/api/generated';
+import { redirect } from '@tanstack/react-router';
 
 export const LoginForm = () => {
   const setToken = useAuthStore((state) => state.setToken);
@@ -10,8 +11,8 @@ export const LoginForm = () => {
   const { mutate, isPending } = useLogin({
     mutation: {
       onSuccess: (response) => {
-        console.log(response);
         setToken(response.data.accessToken);
+        redirect({ to: '/' });
       },
       onError: (error: AxiosError) => {
         // FIXME make a better error handling (in server side firstly)

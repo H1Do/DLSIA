@@ -3,11 +3,11 @@ import { useGetMe } from '../../../shared/api/generated';
 import { useAuthStore } from '../../../shared/store/useAuthStore';
 
 export const useFetchMe = () => {
-  const { token, setUser, user } = useAuthStore();
+  const { token, setUser } = useAuthStore();
 
   const query = useGetMe({
     query: {
-      enabled: !!token && !user,
+      enabled: !!token,
       retry: false,
     },
   });

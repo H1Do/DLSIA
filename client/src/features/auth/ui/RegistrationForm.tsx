@@ -2,6 +2,7 @@ import { Button, Form, Input, message } from 'antd';
 import { useAuthStore } from '../../../shared/store/useAuthStore';
 import type { AxiosError } from 'axios';
 import { useRegister } from '../../../shared/api/generated';
+import { redirect } from '@tanstack/react-router';
 
 export const RegistrationForm = () => {
   const setToken = useAuthStore((state) => state.setToken);
@@ -15,6 +16,7 @@ export const RegistrationForm = () => {
     mutation: {
       onSuccess: (response) => {
         setToken(response.data.accessToken);
+        redirect({ to: '/' });
       },
       onError: (error: AxiosError) => {
         message.error(
