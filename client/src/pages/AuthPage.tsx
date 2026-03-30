@@ -4,6 +4,7 @@ import { RegistrationForm } from '../features/auth/ui/RegistrationForm';
 
 export const AuthPage = () => {
   return (
+    // TODO rewrite to routes instead of tabs
     <Tabs
       centered
       items={[

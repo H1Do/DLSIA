@@ -3,11 +3,16 @@ import { router, queryClient } from './router';
 import { useAuthStore } from '../shared/store/useAuthStore';
 import { useFetchMe } from '../entities/user/hooks/useFetchMe';
 import { Spin, theme } from 'antd';
+import { useEffect } from 'react';
 
-export function App() {
+export const App = () => {
   const { token } = theme.useToken();
   const { isLoading, isFetching } = useFetchMe();
   const { user } = useAuthStore();
+
+  useEffect(() => {
+    router.invalidate();
+  }, [user]);
 
   const isVerifying = (isLoading || isFetching) && !user;
 
@@ -39,4 +44,4 @@ export function App() {
       }}
     />
   );
-}
+};

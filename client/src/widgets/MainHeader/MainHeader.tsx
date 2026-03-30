@@ -1,21 +1,22 @@
-import { LogoutOutlined } from '@ant-design/icons';
+import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Button, Flex, message, theme } from 'antd';
 import { Header } from 'antd/es/layout/layout';
 import { useAuthStore } from '../../shared/store/useAuthStore';
-import useModal from 'antd/es/modal/useModal';
 import { router } from '../../app/router';
+import { Link } from '@tanstack/react-router';
+import useApp from 'antd/es/app/useApp';
 
 export const MainHeader = () => {
+  const { modal } = useApp();
   const { token } = theme.useToken();
-  const { logout } = useAuthStore();
-  const [modal, contextHolder] = useModal();
+  const { user, logout } = useAuthStore();
 
   const onLogout = () => {
     modal.confirm({
       title: 'Вы точно хотите выйти?',
       okText: 'Да',
       cancelText: 'Нет',
-      okType: 'danger',
+      okType: 'primary',
       onOk: async () => {
         logout();
         await router.invalidate();
@@ -38,13 +39,24 @@ export const MainHeader = () => {
       <div style={{ fontWeight: 'bold', color: token.colorPrimary }}>
         Here will be logo
       </div>
-      <Flex gap={8}>
-        <Avatar />
-        <Button type="text" title="Выйти" popover="hint" onClick={onLogout}>
+      <Flex gap={8} align="center">
+        <div>{user?.name}</div>
+        {/* TODO: link to profile */}
+        <Link to="/" title="Профиль">
+          <Avatar>
+            <UserOutlined />
+          </Avatar>
+        </Link>
+        <Button
+          type="text"
+          title="Выйти"
+          popover="hint"
+          onClick={onLogout}
+          shape="circle"
+        >
           <LogoutOutlined />
         </Button>
       </Flex>
-      {contextHolder}
     </Header>
   );
 };

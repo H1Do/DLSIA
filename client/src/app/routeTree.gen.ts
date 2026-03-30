@@ -9,91 +9,123 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as AuthRouteImport } from './routes/auth'
-import { Route as MainRouteImport } from './routes/_main'
-import { Route as MainIndexRouteImport } from './routes/_main.index'
+import { Route as UnauthorizedRouteImport } from './routes/_unauthorized'
+import { Route as AuthorizedRouteImport } from './routes/_authorized'
+import { Route as AuthorizedIndexRouteImport } from './routes/_authorized.index'
+import { Route as UnauthorizedAuthRouteImport } from './routes/_unauthorized.auth'
 
-const AuthRoute = AuthRouteImport.update({
-  id: '/auth',
-  path: '/auth',
+const UnauthorizedRoute = UnauthorizedRouteImport.update({
+  id: '/_unauthorized',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MainRoute = MainRouteImport.update({
-  id: '/_main',
+const AuthorizedRoute = AuthorizedRouteImport.update({
+  id: '/_authorized',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MainIndexRoute = MainIndexRouteImport.update({
+const AuthorizedIndexRoute = AuthorizedIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => MainRoute,
+  getParentRoute: () => AuthorizedRoute,
+} as any)
+const UnauthorizedAuthRoute = UnauthorizedAuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => UnauthorizedRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof MainIndexRoute
-  '/auth': typeof AuthRoute
+  '/': typeof AuthorizedIndexRoute
+  '/auth': typeof UnauthorizedAuthRoute
 }
 export interface FileRoutesByTo {
-  '/auth': typeof AuthRoute
-  '/': typeof MainIndexRoute
+  '/': typeof AuthorizedIndexRoute
+  '/auth': typeof UnauthorizedAuthRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/_main': typeof MainRouteWithChildren
-  '/auth': typeof AuthRoute
-  '/_main/': typeof MainIndexRoute
+  '/_authorized': typeof AuthorizedRouteWithChildren
+  '/_unauthorized': typeof UnauthorizedRouteWithChildren
+  '/_unauthorized/auth': typeof UnauthorizedAuthRoute
+  '/_authorized/': typeof AuthorizedIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths: '/' | '/auth'
   fileRoutesByTo: FileRoutesByTo
-  to: '/auth' | '/'
-  id: '__root__' | '/_main' | '/auth' | '/_main/'
+  to: '/' | '/auth'
+  id:
+    | '__root__'
+    | '/_authorized'
+    | '/_unauthorized'
+    | '/_unauthorized/auth'
+    | '/_authorized/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  MainRoute: typeof MainRouteWithChildren
-  AuthRoute: typeof AuthRoute
+  AuthorizedRoute: typeof AuthorizedRouteWithChildren
+  UnauthorizedRoute: typeof UnauthorizedRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_main': {
-      id: '/_main'
+    '/_unauthorized': {
+      id: '/_unauthorized'
       path: ''
       fullPath: '/'
-      preLoaderRoute: typeof MainRouteImport
+      preLoaderRoute: typeof UnauthorizedRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_main/': {
-      id: '/_main/'
+    '/_authorized': {
+      id: '/_authorized'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthorizedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authorized/': {
+      id: '/_authorized/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof MainIndexRouteImport
-      parentRoute: typeof MainRoute
+      preLoaderRoute: typeof AuthorizedIndexRouteImport
+      parentRoute: typeof AuthorizedRoute
+    }
+    '/_unauthorized/auth': {
+      id: '/_unauthorized/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof UnauthorizedAuthRouteImport
+      parentRoute: typeof UnauthorizedRoute
     }
   }
 }
 
-interface MainRouteChildren {
-  MainIndexRoute: typeof MainIndexRoute
+interface AuthorizedRouteChildren {
+  AuthorizedIndexRoute: typeof AuthorizedIndexRoute
 }
 
-const MainRouteChildren: MainRouteChildren = {
-  MainIndexRoute: MainIndexRoute,
+const AuthorizedRouteChildren: AuthorizedRouteChildren = {
+  AuthorizedIndexRoute: AuthorizedIndexRoute,
 }
 
-const MainRouteWithChildren = MainRoute._addFileChildren(MainRouteChildren)
+const AuthorizedRouteWithChildren = AuthorizedRoute._addFileChildren(
+  AuthorizedRouteChildren,
+)
+
+interface UnauthorizedRouteChildren {
+  UnauthorizedAuthRoute: typeof UnauthorizedAuthRoute
+}
+
+const UnauthorizedRouteChildren: UnauthorizedRouteChildren = {
+  UnauthorizedAuthRoute: UnauthorizedAuthRoute,
+}
+
+const UnauthorizedRouteWithChildren = UnauthorizedRoute._addFileChildren(
+  UnauthorizedRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
-  MainRoute: MainRouteWithChildren,
-  AuthRoute: AuthRoute,
+  AuthorizedRoute: AuthorizedRouteWithChildren,
+  UnauthorizedRoute: UnauthorizedRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -4,12 +4,12 @@
  * Temp title
  * OpenAPI spec version: 1.0
  */
-import type { UserEntityName } from './userEntityName';
 
 export interface UserEntity {
   id: number;
   createdAt: string;
   updatedAt: string;
-  name: UserEntityName;
+  /** @nullable */
+  name: string | null;
   email: string;
 }

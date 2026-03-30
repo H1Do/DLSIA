@@ -1,7 +1,7 @@
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router';
 import { MainLayout } from '../layouts/base-layout';
 
-export const Route = createFileRoute('/_main')({
+export const Route = createFileRoute('/_authorized')({
   beforeLoad: ({ context }) => {
     if (!context.auth.isAuthenticated) {
       throw redirect({ to: '/auth' });

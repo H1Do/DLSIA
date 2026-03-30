@@ -1,11 +1,13 @@
 import type { AxiosError } from 'axios';
 import type { LoginDto } from '../../../shared/api/model';
 import { useAuthStore } from '../../../shared/store/useAuthStore';
-import { Button, Form, Input, message } from 'antd';
+import { Button, Form, Input } from 'antd';
 import { useLogin } from '../../../shared/api/generated';
 import { redirect } from '@tanstack/react-router';
+import useApp from 'antd/es/app/useApp';
 
 export const LoginForm = () => {
+  const { message } = useApp();
   const setToken = useAuthStore((state) => state.setToken);
 
   const { mutate, isPending } = useLogin({
