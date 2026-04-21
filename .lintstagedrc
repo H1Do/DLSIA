@@ -1,0 +1,10 @@
+{
+  "server/src/**/*.ts": [
+    "npm run lint -w server -- --fix",
+    "npm run format -w server"
+  ],
+  "client/src/**/*.{js,jsx,ts,tsx}": [
+    "npm run lint -w client -- --fix",
+    "npm run format -w client"
+  ]
+}
