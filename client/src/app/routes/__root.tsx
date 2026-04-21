@@ -1,6 +1,14 @@
 import type { QueryClient } from '@tanstack/react-query';
 import { createRootRouteWithContext, Outlet } from '@tanstack/react-router';
-import { TanStackRouterDevtools } from '@tanstack/router-devtools';
+import React, { Suspense } from 'react';
+
+const TanStackRouterDevtools = import.meta.env.PROD
+  ? () => null
+  : React.lazy(() =>
+      import('@tanstack/router-devtools').then((res) => ({
+        default: res.TanStackRouterDevtools,
+      })),
+    );
 
 interface RouterContext {
   queryClient: QueryClient;
@@ -12,7 +20,11 @@ export const Route = createRootRouteWithContext<RouterContext>()({
     return (
       <>
         <Outlet />
-        <TanStackRouterDevtools />
+        {!import.meta.env.PROD && (
+          <Suspense>
+            <TanStackRouterDevtools />
+          </Suspense>
+        )}
       </>
     );
   },
