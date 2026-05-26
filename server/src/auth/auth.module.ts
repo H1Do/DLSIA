@@ -6,7 +6,10 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { UsersModule } from '../users/users.module';
 import { JwtStrategy } from './strategy/jwt.strategy';
-
+import dotenv from 'dotenv';
+import path from 'path';
+dotenv.config({ path: path.resolve(process.cwd(), '../../../.env') });
+console.log(process.env.JWT_SECRET);
 @Module({
   imports: [
     PrismaModule,
