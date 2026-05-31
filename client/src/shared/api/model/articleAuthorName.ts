@@ -5,4 +5,7 @@
  * OpenAPI spec version: 1.0
  */
 
-export type UserEntityName = { [key: string]: unknown };
+/**
+ * @nullable
+ */
+export type ArticleAuthorName = { [key: string]: unknown } | null;
