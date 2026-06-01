@@ -1,38 +1,18 @@
 import { useState } from 'react';
-import { useNavigate } from '@tanstack/react-router';
-import {
-  Button,
-  Card,
-  Col,
-  Empty,
-  Modal,
-  Row,
-  Spin,
-  Tag,
-  Typography,
-} from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { Row, Spin, Empty, Typography, Button, Tooltip } from 'antd';
+import { AppstoreOutlined, UnorderedListOutlined } from '@ant-design/icons';
 import { useAuthStore } from '../shared/store/useAuthStore';
-import { ArticleForm } from '../features/articles/ui/ArticleForm';
-import { useGetAllArticles, useCreateArticle } from '../shared/api/generated';
+import { useArticles, ArticleCard, ArticleListItem } from '../entities/article';
+import { CreateArticleButton } from '../features/articles/create-article/ui/CreateArticleButton';
 
-const { Title, Paragraph, Text } = Typography;
+const { Title } = Typography;
+
+type ViewMode = 'grid' | 'list';
 
 export const ArticlesPage = () => {
-  const navigate = useNavigate();
   const { user } = useAuthStore();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const { data, isLoading } = useGetAllArticles();
-  const articles = data?.data ?? [];
-
-  const { mutate: createArticle, isPending } = useCreateArticle({
-    mutation: {
-      onSuccess: () => {
-        setIsModalOpen(false);
-      },
-    },
-  });
+  const { articles, isLoading } = useArticles();
+  const [viewMode, setViewMode] = useState<ViewMode>('grid');
 
   if (isLoading) {
     return (
@@ -55,64 +35,40 @@ export const ArticlesPage = () => {
         <Title level={2} style={{ margin: 0 }}>
           Статьи
         </Title>
-        {user && (
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={() => setIsModalOpen(true)}
-          >
-            Написать статью
-          </Button>
-        )}
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+          <Tooltip title="Карточки">
+            <Button
+              type={viewMode === 'grid' ? 'primary' : 'default'}
+              icon={<AppstoreOutlined />}
+              onClick={() => setViewMode('grid')}
+            />
+          </Tooltip>
+          <Tooltip title="Список">
+            <Button
+              type={viewMode === 'list' ? 'primary' : 'default'}
+              icon={<UnorderedListOutlined />}
+              onClick={() => setViewMode('list')}
+            />
+          </Tooltip>
+          {user && <CreateArticleButton />}
+        </div>
       </div>
 
       {articles.length === 0 ? (
         <Empty description="Статей пока нет" />
-      ) : (
+      ) : viewMode === 'grid' ? (
         <Row gutter={[16, 16]}>
           {articles.map((article) => (
-            <Col xs={24} sm={12} lg={8} key={String(article.id)}>
-              <Card
-                title={String(article.title)}
-                style={{ cursor: 'pointer' }}
-                onClick={() =>
-                  navigate({
-                    to: '/article/$id',
-                    params: { id: String(article.id) },
-                  })
-                }
-                extra={
-                  <Tag color={article.published ? 'green' : 'orange'}>
-                    {article.published ? 'Опубликовано' : 'Черновик'}
-                  </Tag>
-                }
-              >
-                {article.description && (
-                  <Paragraph ellipsis={{ rows: 2 }}>
-                    {String(article.description)}
-                  </Paragraph>
-                )}
-                <Text type="secondary" style={{ fontSize: 12 }}>
-                  Автор: {String(article.author?.name ?? article.author?.email ?? '—')}
-                </Text>
-              </Card>
-            </Col>
+            <ArticleCard key={String(article.id)} article={article} />
           ))}
         </Row>
+      ) : (
+        <div style={{ border: '1px solid #f0f0f0', borderRadius: 8 }}>
+          {articles.map((article) => (
+            <ArticleListItem key={String(article.id)} article={article} />
+          ))}
+        </div>
       )}
-
-      <Modal
-        title="Новая статья"
-        open={isModalOpen}
-        onCancel={() => setIsModalOpen(false)}
-        footer={null}
-        destroyOnClose
-      >
-        <ArticleForm
-          onSubmit={(values) => createArticle({ data: values })}
-          isLoading={isPending}
-        />
-      </Modal>
     </div>
   );
 };
