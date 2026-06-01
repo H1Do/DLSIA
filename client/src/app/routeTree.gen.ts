@@ -13,6 +13,7 @@ import { Route as UnauthorizedRouteImport } from './routes/_unauthorized'
 import { Route as AuthorizedRouteImport } from './routes/_authorized'
 import { Route as AuthorizedIndexRouteImport } from './routes/_authorized.index'
 import { Route as UnauthorizedAuthRouteImport } from './routes/_unauthorized.auth'
+import { Route as AuthorizedProfileRouteImport } from './routes/_authorized.profile'
 import { Route as AuthorizedArticlesRouteImport } from './routes/_authorized.articles'
 import { Route as AuthorizedArticleIdRouteImport } from './routes/_authorized.article.$id'
 
@@ -34,6 +35,11 @@ const UnauthorizedAuthRoute = UnauthorizedAuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => UnauthorizedRoute,
 } as any)
+const AuthorizedProfileRoute = AuthorizedProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AuthorizedRoute,
+} as any)
 const AuthorizedArticlesRoute = AuthorizedArticlesRouteImport.update({
   id: '/articles',
   path: '/articles',
@@ -48,12 +54,14 @@ const AuthorizedArticleIdRoute = AuthorizedArticleIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof AuthorizedIndexRoute
   '/articles': typeof AuthorizedArticlesRoute
+  '/profile': typeof AuthorizedProfileRoute
   '/auth': typeof UnauthorizedAuthRoute
   '/article/$id': typeof AuthorizedArticleIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof AuthorizedIndexRoute
   '/articles': typeof AuthorizedArticlesRoute
+  '/profile': typeof AuthorizedProfileRoute
   '/auth': typeof UnauthorizedAuthRoute
   '/article/$id': typeof AuthorizedArticleIdRoute
 }
@@ -62,20 +70,22 @@ export interface FileRoutesById {
   '/_authorized': typeof AuthorizedRouteWithChildren
   '/_unauthorized': typeof UnauthorizedRouteWithChildren
   '/_authorized/articles': typeof AuthorizedArticlesRoute
+  '/_authorized/profile': typeof AuthorizedProfileRoute
   '/_unauthorized/auth': typeof UnauthorizedAuthRoute
   '/_authorized/': typeof AuthorizedIndexRoute
   '/_authorized/article/$id': typeof AuthorizedArticleIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/articles' | '/auth' | '/article/$id'
+  fullPaths: '/' | '/articles' | '/profile' | '/auth' | '/article/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/articles' | '/auth' | '/article/$id'
+  to: '/' | '/articles' | '/profile' | '/auth' | '/article/$id'
   id:
     | '__root__'
     | '/_authorized'
     | '/_unauthorized'
     | '/_authorized/articles'
+    | '/_authorized/profile'
     | '/_unauthorized/auth'
     | '/_authorized/'
     | '/_authorized/article/$id'
@@ -116,6 +126,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UnauthorizedAuthRouteImport
       parentRoute: typeof UnauthorizedRoute
     }
+    '/_authorized/profile': {
+      id: '/_authorized/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AuthorizedProfileRouteImport
+      parentRoute: typeof AuthorizedRoute
+    }
     '/_authorized/articles': {
       id: '/_authorized/articles'
       path: '/articles'
@@ -135,12 +152,14 @@ declare module '@tanstack/react-router' {
 
 interface AuthorizedRouteChildren {
   AuthorizedArticlesRoute: typeof AuthorizedArticlesRoute
+  AuthorizedProfileRoute: typeof AuthorizedProfileRoute
   AuthorizedIndexRoute: typeof AuthorizedIndexRoute
   AuthorizedArticleIdRoute: typeof AuthorizedArticleIdRoute
 }
 
 const AuthorizedRouteChildren: AuthorizedRouteChildren = {
   AuthorizedArticlesRoute: AuthorizedArticlesRoute,
+  AuthorizedProfileRoute: AuthorizedProfileRoute,
   AuthorizedIndexRoute: AuthorizedIndexRoute,
   AuthorizedArticleIdRoute: AuthorizedArticleIdRoute,
 }
