@@ -4,6 +4,7 @@ import { tanstackRouter } from '@tanstack/router-plugin/vite';
 import path from 'path';
 
 export default defineConfig({
+  envDir: '../',
   plugins: [
     tanstackRouter({
       routesDirectory: './src/app/routes',

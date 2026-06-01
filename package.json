@@ -11,14 +11,25 @@
     "dev": "concurrently \"npm run dev -w client\" \"npm run dev -w server\"",
     "build": "npm run build --workspaces",
     "lint": "npm run lint --workspaces",
+    "lint:server": "npm run lint -w server && npm run ",
+    "lint:client": "npm run lint -w client",
+    "format": "npm run format --workspaces",
+    "format:server": "npm run format -w server",
+    "format:client": "npm run format -w client",
     "contract": "npm run contract -w client",
     "generate": "npm run generate -w server",
     "migrate": "npm run migrate -w server",
     "migrate:init": "npm run migrate:init -w server",
     "migrate:deploy": "npm run migrate:deploy -w server",
-    "studio": "npm run studio -w server"
+    "studio": "npm run studio -w server",
+    "prepare": "husky install"
   },
   "devDependencies": {
-    "concurrently": "^9.2.1"
+    "concurrently": "^9.2.1",
+    "husky": "^8.0.0",
+    "lint-staged": "^16.4.0"
+  },
+  "dependencies": {
+    "@nestjs/config": "^4.0.4"
   }
 }
