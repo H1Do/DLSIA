@@ -3,7 +3,6 @@ import react from '@vitejs/plugin-react-swc';
 import { tanstackRouter } from '@tanstack/router-plugin/vite';
 import path from 'path';
 
-// https://vite.dev/config/
 export default defineConfig({
   envDir: '../',
   plugins: [

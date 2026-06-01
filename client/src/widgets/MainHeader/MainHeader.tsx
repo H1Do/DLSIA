@@ -36,9 +36,17 @@ export const MainHeader = () => {
         padding: `0 ${token.paddingLG}px`,
       }}
     >
-      <div style={{ fontWeight: 'bold', color: token.colorPrimary }}>
-        Here will be logo
-      </div>
+      <Flex gap={24} align="center">
+        <div style={{ fontWeight: 'bold', color: token.colorPrimary }}>
+          Here will be logo
+        </div>
+        <Link
+          to="/articles"
+          style={{ color: token.colorText, textDecoration: 'none' }}
+            >
+          Статьи
+        </Link>
+      </Flex>
       <Flex gap={8} align="center">
         <div>{user?.name}</div>
         {/* TODO: link to profile */}

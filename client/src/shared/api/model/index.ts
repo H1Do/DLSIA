@@ -5,8 +5,14 @@
  * OpenAPI spec version: 1.0
  */
 
+export * from './articleAuthor';
+export * from './articleAuthorName';
+export * from './articleEntity';
+export * from './articleEntityAuthorId';
+export * from './articleEntityDescription';
 export * from './authEntity';
+export * from './createArticleDto';
 export * from './createUserDto';
 export * from './loginDto';
+export * from './updateArticleDto';
 export * from './userEntity';
-export * from './userEntityName';

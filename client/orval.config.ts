@@ -1,6 +1,9 @@
 import { defineConfig } from 'orval';
-import { config } from 'dotenv';
-config({ path: '../.env' });
+import path from 'path';
+
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
+
+console.log('env:', process.env.VITE_API_SCHEMA_URL);
 
 export default defineConfig({
   api: {
