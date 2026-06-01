@@ -37,9 +37,11 @@ export const MainHeader = () => {
       }}
     >
       <Flex gap={24} align="center">
-        <div style={{ fontWeight: 'bold', color: token.colorPrimary }}>
-          Here will be logo
-        </div>
+        <Link to="/" style={{ textDecoration: 'none' }}>
+          <div style={{ fontWeight: 'bold', color: token.colorPrimary }}>
+            DLSIA
+          </div>
+        </Link>
         <Link
           to="/articles"
           style={{ color: token.colorText, textDecoration: 'none' }}
@@ -49,12 +51,11 @@ export const MainHeader = () => {
       </Flex>
       <Flex gap={8} align="center">
         <div>{user?.name}</div>
-        {/* TODO: link to profile */}
-        <Link to="/" title="Профиль">
+        {<Link to="/profile" title="Профиль">
           <Avatar>
             <UserOutlined />
           </Avatar>
-        </Link>
+        </Link>}
         <Button
           type="text"
           title="Выйти"
