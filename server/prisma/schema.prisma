@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider     = "prisma-client-js"
   moduleFormat = "cjs"
@@ -19,19 +13,33 @@ model User {
   name      String?
   email     String    @unique
   password  String
+  bio       String?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   articles  Article[]
+  comments  Comment[]
 }
 
 model Article {
-  id          Int      @id @default(autoincrement())
-  title       String   @unique
+  id          Int       @id @default(autoincrement())
+  title       String    @unique
   description String?
   body        String
-  published   Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  author      User?    @relation(fields: [authorId], references: [id])
+  published   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  author      User?     @relation(fields: [authorId], references: [id])
   authorId    Int?
+  comments    Comment[]
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  body      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  articleId Int
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  Int
 }

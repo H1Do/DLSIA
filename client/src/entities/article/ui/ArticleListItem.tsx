@@ -13,9 +13,7 @@ export const ArticleListItem = ({ article }: Props) => {
 
   return (
     <div
-      onClick={() =>
-        navigate({ to: '/article/$id', params: { id: String(article.id) } })
-      }
+      onClick={() => navigate({ to: '/article/$id', params: { id: String(article.id) } })}
       style={{
         padding: '12px 16px',
         borderBottom: '1px solid #f0f0f0',
@@ -27,19 +25,20 @@ export const ArticleListItem = ({ article }: Props) => {
       }}
     >
       <div style={{ flex: 1 }}>
-        <Text strong style={{ fontSize: 16 }}>
-          {String(article.title)}
-        </Text>
+        <Text strong style={{ fontSize: 16 }}>{String(article.title)}</Text>
         {article.description && (
-          <Paragraph
-            ellipsis={{ rows: 1 }}
-            type="secondary"
-            style={{ margin: '4px 0 0' }}
-          >
+          <Paragraph ellipsis={{ rows: 1 }} type="secondary" style={{ margin: '4px 0 0' }}>
             {String(article.description)}
           </Paragraph>
         )}
-        <Text type="secondary" style={{ fontSize: 12 }}>
+        <Text
+          type="secondary"
+          style={{ fontSize: 12, cursor: 'pointer', textDecoration: 'underline' }}
+          onClick={(e) => {
+            e.stopPropagation();
+            navigate({ to: '/profile/$id', params: { id: String(article.author?.id) } });
+          }}
+        >
           Автор: {String(article.author?.name ?? article.author?.email ?? '—')}
         </Text>
       </div>

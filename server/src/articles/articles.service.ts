@@ -2,6 +2,7 @@ import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/commo
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
+import { ArticlesQueryDto } from './dto/articles-query.dto';
 
 @Injectable()
 export class ArticlesService {
@@ -14,18 +15,50 @@ export class ArticlesService {
     });
   }
 
-  async findAll(currentUserId?: number) {
-    return this.prisma.article.findMany({
-      where: {
-        OR: [
-          { published: true },
-          // свои черновики видны только автору
-          ...(currentUserId ? [{ published: false, authorId: currentUserId }] : []),
-        ],
-      },
-      include: { author: { select: { id: true, name: true, email: true } } },
-      orderBy: { createdAt: 'desc' },
-    });
+  async findAll(query: ArticlesQueryDto, currentUserId?: number) {
+    const { search, page = 1, limit = 9 } = query;
+    const pageNum = Number(page);
+    const limitNum = Number(limit);
+
+    const where = {
+      OR: [
+        { published: true },
+        ...(currentUserId ? [{ published: false, authorId: currentUserId }] : []),
+      ],
+      ...(search
+        ? {
+            AND: [
+              {
+                OR: [
+                  { title: { contains: search, mode: 'insensitive' as const } },
+                  { description: { contains: search, mode: 'insensitive' as const } },
+                  {
+                    author: {
+                      OR: [
+                        { name: { contains: search, mode: 'insensitive' as const } },
+                        { email: { contains: search, mode: 'insensitive' as const } },
+                      ],
+                    },
+                  },
+                ],
+              },
+            ],
+          }
+        : {}),
+    };
+
+    const [data, total] = await Promise.all([
+      this.prisma.article.findMany({
+        where,
+        include: { author: { select: { id: true, name: true, email: true } } },
+        orderBy: { createdAt: 'desc' },
+        skip: (pageNum - 1) * limitNum,
+        take: limitNum,
+      }),
+      this.prisma.article.count({ where }),
+    ]);
+
+    return { data, total, page, limit };
   }
 
   async findOne(id: number, currentUserId?: number) {
@@ -34,7 +67,6 @@ export class ArticlesService {
       include: { author: { select: { id: true, name: true, email: true } } },
     });
     if (!article) throw new NotFoundException(`Статья #${id} не найдена`);
-    // черновик виден только автору
     if (!article.published && article.authorId !== currentUserId) {
       throw new NotFoundException(`Статья #${id} не найдена`);
     }

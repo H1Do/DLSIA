@@ -7,5 +7,5 @@ export const ProfilePage = () => {
 
   if (!user) return <Navigate to="/auth" />;
 
-  return <UserProfile user={user} />;
+  return <UserProfile user={user} isOwner={true} />;
 };
