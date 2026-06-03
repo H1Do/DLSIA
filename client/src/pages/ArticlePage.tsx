@@ -1,43 +1,24 @@
 import { useParams, useNavigate } from '@tanstack/react-router';
-import { useState } from 'react';
 import { useAuthStore } from '../shared/store/useAuthStore';
-import { ArticleForm } from '../features/articles/ui/ArticleForm';
-import { useGetArticle, useUpdateArticle, useDeleteArticle } from '../shared/api/generated';
-import { ArrowLeftOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { Button, Divider, Modal, Popconfirm, Space, Spin, Tag, Typography } from 'antd';
+import { useArticle } from '../entities/article';
+import { ArrowLeftOutlined } from '@ant-design/icons';
+import { Button, Divider, Space, Spin, Tag, Typography } from 'antd';
+import { EditArticleButton } from '../features/articles/edit-article/ui/EditArticleButton';
+import { DeleteArticleButton } from '../features/articles/delete-article/ui/DeleteArticleButton';
+import { PublishArticleButton } from '../features/articles/publish-article/ui/PublishArticleButton';
+import { CommentSection } from '../features/comments/ui/CommentSection';
 
 const { Title, Paragraph, Text } = Typography;
 
 export const ArticlePage = () => {
-  const { id } = useParams({ from: '/_authorized/article/$id' });
+  const { id } = useParams({ from: '/_public/article/$id' });
   const navigate = useNavigate();
   const { user } = useAuthStore();
-  const [isEditOpen, setIsEditOpen] = useState(false);
 
-  const { data, isLoading, refetch } = useGetArticle(Number(id));
-  const article = data?.data;
+  const { article, isLoading } = useArticle(Number(id));
 
-  const { mutate: updateArticle, isPending } = useUpdateArticle({
-    mutation: {
-      onSuccess: () => {
-        setIsEditOpen(false);
-        void refetch();
-      },
-    },
-  });
-  const { mutate: deleteArticle, isPending: isDeleting } = useDeleteArticle({
-    mutation: {
-        onSuccess: () => {
-            navigate({ to: '/articles' });
-        },
-    },
-  });
   if (isLoading) {
-    return (
-      <div style={{ textAlign: 'center', padding: 40 }}>
-        <Spin size="large" />
-      </div>
-    );
+    return <div style={{ textAlign: 'center', padding: 40 }}><Spin size="large" /></div>;
   }
 
   if (!article) return null;
@@ -59,40 +40,21 @@ export const ArticlePage = () => {
         <Tag color={article.published ? 'green' : 'orange'}>
           {article.published ? 'Опубликовано' : 'Черновик'}
         </Tag>
-            {isAuthor && (
-            <Button
-                icon={<EditOutlined />}
-                size="small"
-                onClick={() => setIsEditOpen(true)}
-            >
-            Редактировать
-        </Button>
-        )}
-        {isAuthor && (
-            <Popconfirm
-                title="Удалить статью?"
-                description="Это действие нельзя отменить"
-                okText="Удалить"
-                cancelText="Отмена"
-                okType="danger"
-                onConfirm={() => deleteArticle({ id: Number(id) })}
-            >
-                <Button
-                    icon={<DeleteOutlined />}
-                    size="small"
-                    danger
-                    loading={isDeleting}
-                >
-                Удалить
-                </Button>
-            </Popconfirm>
-            )}
+        {isAuthor && <PublishArticleButton article={article} />}
+        {isAuthor && <EditArticleButton article={article} />}
+        {isAuthor && <DeleteArticleButton articleId={Number(article.id)} />}
       </Space>
 
       <Title>{String(article.title)}</Title>
 
       <Text type="secondary">
-        Автор: {String(article.author?.name ?? article.author?.email ?? '—')}
+        Автор:{' '}
+        <span
+          style={{ cursor: 'pointer', textDecoration: 'underline' }}
+          onClick={() => navigate({ to: '/profile/$id', params: { id: String(article.author?.id) } })}
+        >
+          {String(article.author?.name ?? article.author?.email ?? '—')}
+        </span>
         {' · '}
         {new Date(String(article.createdAt)).toLocaleDateString('ru-RU')}
       </Text>
@@ -104,29 +66,7 @@ export const ArticlePage = () => {
       )}
 
       <Paragraph>{String(article.body)}</Paragraph>
-
-      <Modal
-        title="Редактировать статью"
-        open={isEditOpen}
-        onCancel={() => setIsEditOpen(false)}
-        footer={null}
-        destroyOnClose
-      >
-        <ArticleForm
-          onSubmit={(values) =>
-            updateArticle({ id: Number(id), data: values })
-          }
-          isLoading={isPending}
-          initialValues={{
-            title: String(article.title),
-            description: article.description
-              ? String(article.description)
-              : undefined,
-            body: String(article.body),
-            published: Boolean(article.published),
-          }}
-        />
-      </Modal>
+      <CommentSection articleId={Number(id)} />
     </div>
   );
 };

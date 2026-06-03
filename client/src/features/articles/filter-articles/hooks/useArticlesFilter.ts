@@ -1,19 +1,26 @@
-import { useState, useMemo } from 'react';
-import type { ArticleEntity } from '../../../../shared/api/model';
+import { useState } from 'react';
 
-export const useArticlesFilter = (articles: ArticleEntity[]) => {
+export const useArticlesFilter = () => {
   const [search, setSearch] = useState('');
+  const [committedSearch, setCommittedSearch] = useState('');
+  const [page, setPage] = useState(1);
 
-  const filtered = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    if (!q) return articles;
-    return articles.filter((a) => {
-      const title = String(a.title ?? '').toLowerCase();
-      const desc = String(a.description ?? '').toLowerCase();
-      const author = String(a.author?.name ?? a.author?.email ?? '').toLowerCase();
-      return title.includes(q) || desc.includes(q) || author.includes(q);
-    });
-  }, [articles, search]);
+  const handleSearch = () => {
+    setCommittedSearch(search);
+    setPage(1);
+  };
 
-  return { search, setSearch, filtered };
+  const handlePageChange = (p: number) => {
+    setPage(p);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  return {
+    search,
+    setSearch,
+    committedSearch,
+    page,
+    handleSearch,
+    handlePageChange,
+  };
 };

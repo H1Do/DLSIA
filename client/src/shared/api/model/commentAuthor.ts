@@ -4,14 +4,11 @@
  * Temp title
  * OpenAPI spec version: 1.0
  */
+import type { CommentAuthorName } from './commentAuthorName';
 
-export interface UserEntity {
+export interface CommentAuthor {
   id: number;
-  createdAt: string;
-  updatedAt: string;
   /** @nullable */
-  name: string | null;
+  name?: CommentAuthorName;
   email: string;
-  /** @nullable */
-  bio?: string | null;
 }

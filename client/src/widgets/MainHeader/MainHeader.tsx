@@ -50,22 +50,29 @@ export const MainHeader = () => {
         </Link>
       </Flex>
       <Flex gap={8} align="center">
-        <div>{user?.name}</div>
-        {<Link to="/profile" title="Профиль">
-          <Avatar>
-            <UserOutlined />
-          </Avatar>
-        </Link>}
-        <Button
-          type="text"
-          title="Выйти"
-          popover="hint"
-          onClick={onLogout}
-          shape="circle"
-        >
-          <LogoutOutlined />
-        </Button>
-      </Flex>
+        {user ? (
+          <>
+            <div>{user.name}</div>
+            <Link to="/profile" title="Профиль">
+              <Avatar>
+                <UserOutlined />
+              </Avatar>
+            </Link>
+            <Button
+              type="text"
+              title="Выйти"
+              onClick={onLogout}
+              shape="circle"
+            >
+              <LogoutOutlined />
+            </Button>
+          </>
+        ) : (
+          <Link to="/auth">
+            <Button type="primary">Войти</Button>
+          </Link>
+        )}
+    </Flex>
     </Header>
   );
 };

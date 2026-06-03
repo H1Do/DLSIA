@@ -10,8 +10,8 @@ const { Title } = Typography;
 
 export const ArticlesPage = () => {
   const { user } = useAuthStore();
-  const { articles, isLoading } = useArticles();
-  const { search, setSearch, filtered } = useArticlesFilter(articles);
+  const { search, setSearch, committedSearch, page, handleSearch, handlePageChange } = useArticlesFilter();
+  const { articles, total, limit, isLoading } = useArticles({ search: committedSearch, page, limit: 9 });
 
   if (isLoading) {
     return <div style={{ textAlign: 'center', padding: 40 }}><Spin size="large" /></div>;
@@ -23,8 +23,15 @@ export const ArticlesPage = () => {
         <Title level={2} style={{ margin: 0 }}>Статьи</Title>
         {user && <CreateArticleButton />}
       </div>
-      <ArticlesFilter value={search} onChange={setSearch} />
-      <ArticlesList articles={filtered} search={search} />
+      <ArticlesFilter value={search} onChange={setSearch} onSearch={handleSearch} />
+      <ArticlesList
+        articles={articles}
+        total={total}
+        page={page}
+        limit={limit}
+        search={committedSearch}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 };

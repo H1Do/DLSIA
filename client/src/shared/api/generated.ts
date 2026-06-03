@@ -25,11 +25,16 @@ import type {
 
 import type {
   ArticleEntity,
+  ArticlesResponseDto,
   AuthEntity,
+  CommentEntity,
   CreateArticleDto,
+  CreateCommentDto,
   CreateUserDto,
+  GetAllArticlesParams,
   LoginDto,
   UpdateArticleDto,
+  UpdateUserDto,
   UserEntity
 } from './model';
 
@@ -148,19 +153,12 @@ export type getMeResponse200 = {
   status: 200
 }
 
-export type getMeResponse401 = {
-  data: void
-  status: 401
-}
-
 export type getMeResponseSuccess = (getMeResponse200) & {
   headers: Headers;
 };
-export type getMeResponseError = (getMeResponse401) & {
-  headers: Headers;
-};
+;
 
-export type getMeResponse = (getMeResponseSuccess | getMeResponseError)
+export type getMeResponse = (getMeResponseSuccess)
 
 export const getGetMeUrl = () => {
 
@@ -192,7 +190,7 @@ export const getGetMeQueryKey = () => {
     }
 
     
-export const getGetMeQueryOptions = <TData = Awaited<ReturnType<typeof getMe>>, TError = void>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getGetMeQueryOptions = <TData = Awaited<ReturnType<typeof getMe>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
@@ -211,10 +209,10 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 }
 
 export type GetMeQueryResult = NonNullable<Awaited<ReturnType<typeof getMe>>>
-export type GetMeQueryError = void
+export type GetMeQueryError = unknown
 
 
-export function useGetMe<TData = Awaited<ReturnType<typeof getMe>>, TError = void>(
+export function useGetMe<TData = Awaited<ReturnType<typeof getMe>>, TError = unknown>(
   options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getMe>>,
@@ -224,7 +222,7 @@ export function useGetMe<TData = Awaited<ReturnType<typeof getMe>>, TError = voi
       >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetMe<TData = Awaited<ReturnType<typeof getMe>>, TError = void>(
+export function useGetMe<TData = Awaited<ReturnType<typeof getMe>>, TError = unknown>(
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getMe>>,
@@ -234,12 +232,12 @@ export function useGetMe<TData = Awaited<ReturnType<typeof getMe>>, TError = voi
       >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetMe<TData = Awaited<ReturnType<typeof getMe>>, TError = void>(
+export function useGetMe<TData = Awaited<ReturnType<typeof getMe>>, TError = unknown>(
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useGetMe<TData = Awaited<ReturnType<typeof getMe>>, TError = void>(
+export function useGetMe<TData = Awaited<ReturnType<typeof getMe>>, TError = unknown>(
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
@@ -255,6 +253,83 @@ export function useGetMe<TData = Awaited<ReturnType<typeof getMe>>, TError = voi
 
 
 
+export type updateMeResponse200 = {
+  data: UserEntity
+  status: 200
+}
+
+export type updateMeResponseSuccess = (updateMeResponse200) & {
+  headers: Headers;
+};
+;
+
+export type updateMeResponse = (updateMeResponseSuccess)
+
+export const getUpdateMeUrl = () => {
+
+
+  
+
+  return `/api/users/me`
+}
+
+export const updateMe = async (updateUserDto: UpdateUserDto, options?: RequestInit): Promise<updateMeResponse> => {
+  
+  return customInstance<updateMeResponse>(getUpdateMeUrl(),
+  {      
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      updateUserDto,)
+  }
+);}
+  
+
+
+
+export const getUpdateMeMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateMe>>, TError,{data: UpdateUserDto}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateMe>>, TError,{data: UpdateUserDto}, TContext> => {
+
+const mutationKey = ['updateMe'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateMe>>, {data: UpdateUserDto}> = (props) => {
+          const {data} = props ?? {};
+
+          return  updateMe(data,requestOptions)
+        }
+
+
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateMeMutationResult = NonNullable<Awaited<ReturnType<typeof updateMe>>>
+    export type UpdateMeMutationBody = UpdateUserDto
+    export type UpdateMeMutationError = unknown
+
+    export const useUpdateMe = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateMe>>, TError,{data: UpdateUserDto}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof updateMe>>,
+        TError,
+        {data: UpdateUserDto},
+        TContext
+      > => {
+      return useMutation(getUpdateMeMutationOptions(options), queryClient);
+    }
+    
 export type loginResponse200 = {
   data: AuthEntity
   status: 200
@@ -487,7 +562,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     }
     
 export type getAllArticlesResponse200 = {
-  data: ArticleEntity[]
+  data: ArticlesResponseDto
   status: 200
 }
 
@@ -498,17 +573,24 @@ export type getAllArticlesResponseSuccess = (getAllArticlesResponse200) & {
 
 export type getAllArticlesResponse = (getAllArticlesResponseSuccess)
 
-export const getGetAllArticlesUrl = () => {
+export const getGetAllArticlesUrl = (params?: GetAllArticlesParams,) => {
+  const normalizedParams = new URLSearchParams();
 
+  Object.entries(params || {}).forEach(([key, value]) => {
+    
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
 
-  
+  const stringifiedParams = normalizedParams.toString();
 
-  return `/api/articles`
+  return stringifiedParams.length > 0 ? `/api/articles?${stringifiedParams}` : `/api/articles`
 }
 
-export const getAllArticles = async ( options?: RequestInit): Promise<getAllArticlesResponse> => {
+export const getAllArticles = async (params?: GetAllArticlesParams, options?: RequestInit): Promise<getAllArticlesResponse> => {
   
-  return customInstance<getAllArticlesResponse>(getGetAllArticlesUrl(),
+  return customInstance<getAllArticlesResponse>(getGetAllArticlesUrl(params),
   {      
     ...options,
     method: 'GET'
@@ -521,23 +603,23 @@ export const getAllArticles = async ( options?: RequestInit): Promise<getAllArti
 
 
 
-export const getGetAllArticlesQueryKey = () => {
+export const getGetAllArticlesQueryKey = (params?: GetAllArticlesParams,) => {
     return [
-    `/api/articles`
+    `/api/articles`, ...(params ? [params] : [])
     ] as const;
     }
 
     
-export const getGetAllArticlesQueryOptions = <TData = Awaited<ReturnType<typeof getAllArticles>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllArticles>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getGetAllArticlesQueryOptions = <TData = Awaited<ReturnType<typeof getAllArticles>>, TError = unknown>(params?: GetAllArticlesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllArticles>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetAllArticlesQueryKey();
+  const queryKey =  queryOptions?.queryKey ?? getGetAllArticlesQueryKey(params);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getAllArticles>>> = ({ signal }) => getAllArticles({ signal, ...requestOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getAllArticles>>> = ({ signal }) => getAllArticles(params, { signal, ...requestOptions });
 
       
 
@@ -551,7 +633,7 @@ export type GetAllArticlesQueryError = unknown
 
 
 export function useGetAllArticles<TData = Awaited<ReturnType<typeof getAllArticles>>, TError = unknown>(
-  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllArticles>>, TError, TData>> & Pick<
+ params: undefined |  GetAllArticlesParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllArticles>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getAllArticles>>,
           TError,
@@ -561,7 +643,7 @@ export function useGetAllArticles<TData = Awaited<ReturnType<typeof getAllArticl
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useGetAllArticles<TData = Awaited<ReturnType<typeof getAllArticles>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllArticles>>, TError, TData>> & Pick<
+ params?: GetAllArticlesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllArticles>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getAllArticles>>,
           TError,
@@ -571,16 +653,16 @@ export function useGetAllArticles<TData = Awaited<ReturnType<typeof getAllArticl
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useGetAllArticles<TData = Awaited<ReturnType<typeof getAllArticles>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllArticles>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ params?: GetAllArticlesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllArticles>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
 export function useGetAllArticles<TData = Awaited<ReturnType<typeof getAllArticles>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllArticles>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ params?: GetAllArticlesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllArticles>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getGetAllArticlesQueryOptions(options)
+  const queryOptions = getGetAllArticlesQueryOptions(params,options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -848,4 +930,262 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
         TContext
       > => {
       return useMutation(getDeleteArticleMutationOptions(options), queryClient);
+    }
+    
+export type createCommentResponse201 = {
+  data: CommentEntity
+  status: 201
+}
+
+export type createCommentResponseSuccess = (createCommentResponse201) & {
+  headers: Headers;
+};
+;
+
+export type createCommentResponse = (createCommentResponseSuccess)
+
+export const getCreateCommentUrl = () => {
+
+
+  
+
+  return `/api/comments`
+}
+
+export const createComment = async (createCommentDto: CreateCommentDto, options?: RequestInit): Promise<createCommentResponse> => {
+  
+  return customInstance<createCommentResponse>(getCreateCommentUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      createCommentDto,)
+  }
+);}
+  
+
+
+
+export const getCreateCommentMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createComment>>, TError,{data: CreateCommentDto}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof createComment>>, TError,{data: CreateCommentDto}, TContext> => {
+
+const mutationKey = ['createComment'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createComment>>, {data: CreateCommentDto}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createComment(data,requestOptions)
+        }
+
+
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateCommentMutationResult = NonNullable<Awaited<ReturnType<typeof createComment>>>
+    export type CreateCommentMutationBody = CreateCommentDto
+    export type CreateCommentMutationError = unknown
+
+    export const useCreateComment = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createComment>>, TError,{data: CreateCommentDto}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof createComment>>,
+        TError,
+        {data: CreateCommentDto},
+        TContext
+      > => {
+      return useMutation(getCreateCommentMutationOptions(options), queryClient);
+    }
+    
+export type getCommentsByArticleResponse200 = {
+  data: CommentEntity[]
+  status: 200
+}
+
+export type getCommentsByArticleResponseSuccess = (getCommentsByArticleResponse200) & {
+  headers: Headers;
+};
+;
+
+export type getCommentsByArticleResponse = (getCommentsByArticleResponseSuccess)
+
+export const getGetCommentsByArticleUrl = (articleId: number,) => {
+
+
+  
+
+  return `/api/comments/article/${articleId}`
+}
+
+export const getCommentsByArticle = async (articleId: number, options?: RequestInit): Promise<getCommentsByArticleResponse> => {
+  
+  return customInstance<getCommentsByArticleResponse>(getGetCommentsByArticleUrl(articleId),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+  
+
+
+
+
+export const getGetCommentsByArticleQueryKey = (articleId: number,) => {
+    return [
+    `/api/comments/article/${articleId}`
+    ] as const;
+    }
+
+    
+export const getGetCommentsByArticleQueryOptions = <TData = Awaited<ReturnType<typeof getCommentsByArticle>>, TError = unknown>(articleId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCommentsByArticle>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetCommentsByArticleQueryKey(articleId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getCommentsByArticle>>> = ({ signal }) => getCommentsByArticle(articleId, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(articleId),  error: 'AxiosError<ErrorResponseDto>',  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getCommentsByArticle>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetCommentsByArticleQueryResult = NonNullable<Awaited<ReturnType<typeof getCommentsByArticle>>>
+export type GetCommentsByArticleQueryError = unknown
+
+
+export function useGetCommentsByArticle<TData = Awaited<ReturnType<typeof getCommentsByArticle>>, TError = unknown>(
+ articleId: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCommentsByArticle>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getCommentsByArticle>>,
+          TError,
+          Awaited<ReturnType<typeof getCommentsByArticle>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetCommentsByArticle<TData = Awaited<ReturnType<typeof getCommentsByArticle>>, TError = unknown>(
+ articleId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCommentsByArticle>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getCommentsByArticle>>,
+          TError,
+          Awaited<ReturnType<typeof getCommentsByArticle>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetCommentsByArticle<TData = Awaited<ReturnType<typeof getCommentsByArticle>>, TError = unknown>(
+ articleId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCommentsByArticle>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useGetCommentsByArticle<TData = Awaited<ReturnType<typeof getCommentsByArticle>>, TError = unknown>(
+ articleId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCommentsByArticle>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetCommentsByArticleQueryOptions(articleId,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+export type deleteCommentResponse200 = {
+  data: CommentEntity
+  status: 200
+}
+
+export type deleteCommentResponseSuccess = (deleteCommentResponse200) & {
+  headers: Headers;
+};
+;
+
+export type deleteCommentResponse = (deleteCommentResponseSuccess)
+
+export const getDeleteCommentUrl = (id: number,) => {
+
+
+  
+
+  return `/api/comments/${id}`
+}
+
+export const deleteComment = async (id: number, options?: RequestInit): Promise<deleteCommentResponse> => {
+  
+  return customInstance<deleteCommentResponse>(getDeleteCommentUrl(id),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
+  }
+);}
+  
+
+
+
+export const getDeleteCommentMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteComment>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteComment>>, TError,{id: number}, TContext> => {
+
+const mutationKey = ['deleteComment'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteComment>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteComment(id,requestOptions)
+        }
+
+
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteCommentMutationResult = NonNullable<Awaited<ReturnType<typeof deleteComment>>>
+    
+    export type DeleteCommentMutationError = unknown
+
+    export const useDeleteComment = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteComment>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof deleteComment>>,
+        TError,
+        {id: number},
+        TContext
+      > => {
+      return useMutation(getDeleteCommentMutationOptions(options), queryClient);
     }
