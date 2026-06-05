@@ -12,7 +12,7 @@ export const MainFooter = () => {
         background: token.colorBgLayout,
       }}
     >
-      footer placeholder
+      DLSIA© 2026 Created by H1Do & F1LoS0F
     </Footer>
   );
 };
